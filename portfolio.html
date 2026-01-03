@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | LEE Yerim</title>
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500;700&family=Noto+Serif+KR:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        /* --- 기본 설정 --- */
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #1a1a1a;
+            --gray-text: #555555;
+            --header-height: 80px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Jost', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: opacity 0.3s; }
+        a:hover { opacity: 0.6; }
+        img { width: 100%; height: auto; display: block; }
+
+        /* --- 헤더 --- */
+        header {
+            position: fixed; top: 0; left: 0; width: 100%; height: var(--header-height);
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 0 60px;
+            background-color: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+        }
+
+        .logo { display: flex; flex-direction: column; }
+        .logo-main { font-size: 24px; font-weight: 700; letter-spacing: 0.1em; }
+        .logo-sub { font-size: 14px; font-weight: 300; color: #888; }
+
+        .menu-icon {
+            cursor: pointer; width: 30px; height: 20px;
+            display: flex; flex-direction: column; justify-content: space-between;
+            z-index: 1100;
+        }
+        .menu-icon span { display: block; width: 100%; height: 2px; background-color: #000; transition: all 0.3s ease; }
+        .menu-icon.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .menu-icon.open span:nth-child(2) { opacity: 0; }
+        .menu-icon.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+        /* 메뉴 오버레이 & 사이드바 */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5); z-index: 1040;
+            opacity: 0; visibility: hidden; transition: all 0.3s ease;
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .side-menu {
+            position: fixed; top: 0; right: 0; width: 300px; height: 100vh;
+            background-color: #fff; box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1050; transform: translateX(100%); transition: transform 0.4s ease;
+            display: flex; flex-direction: column; padding: 100px 40px;
+        }
+        .side-menu.active { transform: translateX(0); }
+        .side-menu li { margin-bottom: 30px; list-style: none; }
+        .side-menu a { font-size: 24px; font-weight: 500; color: #000; display: block; }
+
+        /* --- 메인 컨텐츠 --- */
+        main { padding-top: var(--header-height); }
+
+        /* [수정됨] 히어로 섹션 (이미지 제거, 텍스트 강조) */
+        .hero-section {
+            display: flex; 
+            flex-direction: column;
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+            height: calc(90vh - var(--header-height)); /* 높이를 화면의 90% 정도로 설정하여 시원하게 */
+            width: 100%;
+            background-color: #fff; /* 배경을 깨끗한 흰색으로 */
+        }
+        
+        .hero-content {
+            opacity: 0; 
+            animation: fadeInMove 1.5s ease-out forwards; /* 등장 애니메이션 추가 */
+        }
+
+        .hero-job {
+            font-family: 'Jost', sans-serif;
+            font-size: 16px;
+            letter-spacing: 0.2em;
+            color: #888;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .hero-title-kr { 
+            font-family: 'Noto Serif KR', serif; 
+            font-size: 80px; /* 이름을 아주 크게 강조 */
+            font-weight: 500; 
+            margin-bottom: 10px; 
+            color: #111;
+            line-height: 1.2;
+        }
+        
+        .hero-title-en { 
+            font-family: 'Jost', sans-serif;
+            font-size: 24px; 
+            font-weight: 300; 
+            letter-spacing: 0.1em; 
+            color: #555; 
+        }
+
+        /* 등장 애니메이션 */
+        @keyframes fadeInMove {
+            0% { opacity: 0; transform: translateY(30px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+
+
+        /* --- 포트폴리오 레이아웃 --- */
+        .portfolio-container {
+            padding: 80px 60px;
+            max-width: 1600px;
+            margin: 0 auto;
+        }
+
+        /* 각 섹션 (왼쪽 정보 / 오른쪽 이미지) */
+        .series-section {
+            display: grid;
+            grid-template-columns: 350px 1fr; 
+            gap: 80px;
+            margin-bottom: 150px; /* 섹션 간 간격 */
+            align-items: start;
+            border-bottom: 1px solid #eee; /* 섹션 구분선 */
+            padding-bottom: 80px;
+        }
+        .series-section:last-child { border-bottom: none; }
+
+        /* 왼쪽 정보 (스크롤 시 고정) */
+        .series-info {
+            position: sticky;
+            top: 150px;
+        }
+        .series-title {
+            font-family: 'Noto Serif KR', serif;
+            font-size: 26px;
+            font-weight: 600;
+            margin-bottom: 24px;
+            color: #000;
+        }
+        .series-meta p {
+            font-size: 15px;
+            color: var(--gray-text);
+            margin-bottom: 6px;
+            font-weight: 400;
+            letter-spacing: -0.02em;
+        }
+
+        /* 오른쪽 갤러리 */
+        .series-gallery {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 2열 배치 */
+            gap: 40px 20px;
+        }
+
+        /* 갤러리 아이템 (사진 + 캡션) */
+        .gallery-item {
+            opacity: 0; transform: translateY(30px);
+            transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+        .gallery-item.reveal { opacity: 1; transform: translateY(0); }
+
+        .gallery-item img {
+            width: 100%; height: auto; object-fit: cover;
+            transition: filter 0.3s ease;
+            margin-bottom: 12px;
+        }
+        .gallery-item:hover img { filter: brightness(0.97); }
+
+        /* 3번 섹션처럼 개별 정보가 필요한 경우 사용 */
+        .item-caption {
+            font-size: 13px; color: #888; font-weight: 300;
+        }
+        .item-caption strong {
+            display: block; color: #333; font-weight: 500; margin-bottom: 2px;
+        }
+
+        /* --- 푸터 --- */
+        footer {
+            padding: 60px; border-top: 1px solid #eee;
+            font-size: 14px; color: #888;
+            display: flex; justify-content: space-between;
+        }
+
+        /* --- 반응형 (모바일) --- */
+        @media (max-width: 900px) {
+            header { padding: 0 20px; }
+            .portfolio-container { padding: 60px 20px; }
+            
+            /* [수정됨] 모바일 히어로 조정 */
+            .hero-section { height: 60vh; }
+            .hero-title-kr { font-size: 48px; }
+            .hero-title-en { font-size: 18px; }
+
+            .series-section {
+                grid-template-columns: 1fr; /* 1열로 변경 */
+                gap: 30px;
+                padding-bottom: 60px;
+                margin-bottom: 60px;
+            }
+            .series-info { position: static; margin-bottom: 10px; }
+            .series-gallery { grid-template-columns: 1fr; gap: 30px; }
+            
+            footer { flex-direction: column; text-align: center; gap: 20px; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <header>
+        <div class="logo">
+            <a href="#" class="logo-main">Yerim LEE</a>
+            <span class="logo-sub">이예림 / ceramic artist</span>
+        </div>
+        <div class="menu-icon" id="menuIcon">
+            <span></span><span></span><span></span>
+        </div>
+    </header>
+
+    <nav class="side-menu" id="sideMenu">
+        <ul>
+            <li><a href="#" class="menu-link">Home</a></li>
+            <li><a href="#" class="menu-link">Portfolio</a></li>
+            <li><a href="#" class="menu-link">Contact</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero-section">
+            <div class="hero-content">
+                <p class="hero-job">Ceramic Artist</p>
+                <h1 class="hero-title-kr">이예림</h1>
+                <p class="hero-title-en">Lee Ye Rim</p>
+            </div>
+        </section>
+
+        <div class="portfolio-container">
+
+            <section class="series-section">
+                <div class="series-info">
+                    <h2 class="series-title">머무른 표면</h2>
+                    <div class="series-meta">
+                        <p>2025</p>
+                        <p>물레성형, 산청토, 고화도 유약, 모래</p>
+                        <p>131.5 × 31.5 × 22.5cm</p>
+                    </div>
+                </div>
+                <div class="series-gallery">
+                    <div class="gallery-item"><img src="pic/1-2.jpg" alt="머무른 표면"></div>
+                    <div class="gallery-item"><img src="pic/1-1.jpg" alt="머무른 표면"></div>
+                </div>
+            </section>
+
+            <section class="series-section">
+                <div class="series-info">
+                    <h2 class="series-title">물질의 태도</h2>
+                    <div class="series-meta">
+                        <p>2025</p>
+                        <p>물레성형, 산청토, 고화도 유약, 모래</p>
+                        <p>21.5 × 21.5 × 15.5cm</p>
+                    </div>
+                </div>
+                <div class="series-gallery">
+                    <div class="gallery-item"><img src="pic/2-1.jpg" alt="물질의 태도"></div>
+                    <div class="gallery-item"><img src="pic/2-2.jpg" alt="물질의 태도"></div>
+                </div>
+            </section>
+
+            <section class="series-section">
+                <div class="series-info">
+                    <h2 class="series-title">기울어진 그릇 Series</h2>
+                    <div class="series-meta">
+                        <p>2025</p>
+                        <p>물레성형, 산청토, 고화도 유약, 모래</p>
+                        <p style="margin-top:10px; color:#999; font-size:13px;">* 개별 사이즈 우측 표기</p>
+                    </div>
+                </div>
+                <div class="series-gallery">
+                    <div class="gallery-item">
+                        <img src="pic/3-1.jpg" alt="기울어진 그릇 #1">
+                        <div class="item-caption">
+                            <strong>기울어진 그릇 #1</strong>
+                            11.5 × 11.5 × 7cm
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="pic/3-2.jpg" alt="기울어진 그릇 #2">
+                        <div class="item-caption">
+                            <strong>기울어진 그릇 #2</strong>
+                            11 × 11 × 5.5cm
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="pic/3-3.jpg" alt="기울어진 그릇 #3">
+                        <div class="item-caption">
+                            <strong>기울어진 그릇 #3</strong>
+                            11.5 × 11.5 × 7cm
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="pic/3-4.jpg" alt="기울어진 그릇 #4">
+                        <div class="item-caption">
+                            <strong>기울어진 그릇 #4</strong>
+                            11 × 11 × 6.5cm
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="pic/3-5.jpg" alt="기울어진 그릇 #5">
+                        <div class="item-caption">
+                            <strong>기울어진 그릇 #5</strong>
+                            12 × 12 × 8cm
+                        </div>
+                    </div>
+                    <div class="gallery-item">
+                        <img src="pic/3-6.jpg" alt="기울어진 그릇 #6">
+                        <div class="item-caption">
+                            <strong>기울어진 그릇 #6</strong>
+                            9.5 × 9.5 × 5cm
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="series-section">
+                <div class="series-info">
+                    <h2 class="series-title">쌓이고 흐르는 #1</h2>
+                    <div class="series-meta">
+                        <p>2025</p>
+                        <p>물레성형, 백토, 고화도 유약, 모래</p>
+                        <p>28 × 28 × 11.5cm</p>
+                    </div>
+                </div>
+                <div class="series-gallery">
+                    <div class="gallery-item"><img src="pic/4-1.jpg" alt="쌓이고 흐르는 #1"></div>
+                    <div class="gallery-item"><img src="pic/4-2.jpg" alt="쌓이고 흐르는 #1"></div>
+                </div>
+            </section>
+
+            <section class="series-section">
+                <div class="series-info">
+                    <h2 class="series-title">쌓이고 흐르는 #2</h2>
+                    <div class="series-meta">
+                        <p>2025</p>
+                        <p>물레성형, 산청토, 고화도 유약, 모래</p>
+                        <p>20 × 20 × 16cm</p>
+                    </div>
+                </div>
+                <div class="series-gallery">
+                    <div class="gallery-item"><img src="pic/5-2.jpg" alt="쌓이고 흐르는 #2"></div>
+                    <div class="gallery-item"><img src="pic/5-1.jpg" alt="쌓이고 흐르는 #2"></div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer>
+        <div>&copy; 2026 LEE Yerim. All rights reserved.</div>
+        <div>
+            <a href="https://www.instagram.com/swu_mfa_ceramics" target="_blank">@swu_mfa_ceramics</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const menuIcon = document.getElementById('menuIcon');
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                sideMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuIcon.classList.toggle('open');
+            }
+
+            menuIcon.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+            menuLinks.forEach(link => link.addEventListener('click', toggleMenu));
+
+            // 스크롤 등장 효과
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('reveal');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.1 });
+
+            document.querySelectorAll('.gallery-item').forEach(item => observer.observe(item));
+        });
+    </script>
+</body>
+</html>

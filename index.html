@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LEE Yerim | Ceramics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Jost:wght@300;400;500;700&family=Noto+Sans+KR:wght@300;400;500&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #ffffff;
+            --text-color: #000000;
+            --gray-text: #606060;
+            --accent-color: #8b5cf6;
+            --spacing-unit: 20px;
+            --header-height: 80px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Jost', 'Noto Sans KR', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            -webkit-font-smoothing: antialiased;
+            overflow-x: hidden; /* 사이드 메뉴로 인한 가로 스크롤 방지 */
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: opacity 0.3s;
+        }
+
+        a:hover {
+            opacity: 0.6;
+        }
+
+        /* --- Header --- */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: var(--header-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 60px;
+            background-color: rgba(255, 255, 255, 0.95);
+            z-index: 1000;
+        }
+
+        .logo {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .logo-main {
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+        }
+
+        .logo-sub {
+            font-size: 14px;
+            font-weight: 300;
+            color: var(--gray-text);
+        }
+
+        /* 햄버거 아이콘 스타일 */
+        .menu-icon {
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            z-index: 1100; /* 메뉴판보다 위에 있어야 클릭 가능 */
+        }
+
+        .menu-icon span {
+            display: block;
+            width: 100%;
+            height: 2px;
+            background-color: #000;
+            transition: all 0.3s ease;
+        }
+
+        /* 메뉴 열렸을 때 X 모양으로 변형 */
+        .menu-icon.open span:nth-child(1) { transform: rotate(45deg) translate(5px, 6px); }
+        .menu-icon.open span:nth-child(2) { opacity: 0; }
+        .menu-icon.open span:nth-child(3) { transform: rotate(-45deg) translate(5px, -6px); }
+
+
+        /* --- Side Menu (Portfolio 포함) --- */
+        .overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            z-index: 1040;
+            opacity: 0; visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .overlay.active { opacity: 1; visibility: visible; }
+
+        .side-menu {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 100vh;
+            background-color: #fff;
+            box-shadow: -5px 0 15px rgba(0,0,0,0.1);
+            z-index: 1050;
+            transform: translateX(100%); /* 화면 밖으로 숨김 */
+            transition: transform 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            padding: 100px 40px;
+        }
+        
+        .side-menu.active {
+            transform: translateX(0); /* 화면 안으로 이동 */
+        }
+
+        .side-menu ul { list-style: none; }
+        .side-menu li { margin-bottom: 30px; }
+        .side-menu a {
+            font-size: 24px;
+            font-weight: 500;
+            color: #000;
+            display: block;
+        }
+
+
+        /* --- Main Layout --- */
+        main {
+            padding-top: var(--header-height);
+        }
+
+        /* Hero / Intro Section */
+        .intro-section {
+            display: flex;
+            min-height: calc(100vh - var(--header-height));
+            align-items: center;
+            padding: 60px;
+            gap: 60px;
+        }
+
+        .intro-image {
+            flex: 1;
+            height: 80vh;
+            background-color: #f0f0f0;
+            
+            /* [수정됨] 이미지 태그 대신 배경으로 설정하여 깜빡임 제거 */
+            background-image: url('pic/4-2.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            
+            overflow: hidden;
+        }
+
+        /* [삭제됨] .intro-image img 스타일은 더 이상 필요하지 않습니다. */
+
+        .intro-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding-left: 40px;
+        }
+
+        .artist-name {
+            font-size: 56px;
+            font-weight: 400;
+            margin-bottom: 40px;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title {
+            font-size: 38px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            margin-top: 60px;
+        }
+
+        .about-text {
+            font-size: 16px;
+            color: var(--gray-text);
+            text-align: justify;
+            max-width: 600px;
+            margin-bottom: 20px;
+            font-weight: 300;
+        }
+
+        .about-text.korean {
+            font-family: 'Noto Sans KR', sans-serif;
+            margin-top: 20px;
+        }
+
+        /* --- Gallery Section --- */
+        .gallery-section {
+            padding: 60px;
+            width: 100%;
+            overflow: hidden;
+            position: relative; /* 화살표 위치 기준 */
+        }
+
+        .gallery-container {
+            display: flex;
+            overflow-x: auto;
+            gap: 5px;
+            padding-bottom: 20px;
+            scroll-snap-type: x mandatory;
+            -ms-overflow-style: none;
+            scrollbar-width: none;
+            scroll-behavior: smooth;
+        }
+        
+        .gallery-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .gallery-item {
+            flex: 0 0 auto;
+            height: 500px;
+            scroll-snap-align: center;
+            background-color: #eee;
+            position: relative;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            height: 100%;
+            width: auto;
+            display: block;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.03);
+        }
+
+        /* 갤러리 화살표 버튼 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: rgba(255, 255, 255, 0.7);
+            border: none;
+            cursor: pointer;
+            padding: 15px;
+            z-index: 10;
+            font-size: 24px;
+            color: #333;
+            transition: all 0.3s ease;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .nav-btn:hover {
+            background-color: rgba(255, 255, 255, 1);
+            color: #000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .prev-btn { left: 20px; }
+        .next-btn { right: 20px; }
+
+
+        /* --- Contact Section --- */
+        .contact-section {
+            padding: 100px 60px;
+            background-color: #fafafa;
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+        }
+
+        .contact-col {
+            flex: 1;
+            min-width: 300px;
+            margin-bottom: 40px;
+        }
+
+        .contact-info p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: var(--gray-text);
+            font-weight: 300;
+        }
+
+        .social-link {
+            display: inline-block;
+            margin-top: 10px;
+            font-weight: 500;
+        }
+
+        /* --- Footer --- */
+        footer {
+            padding: 40px 60px;
+            border-top: 1px solid #eee;
+            font-size: 14px;
+            color: #888;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        /* --- Mobile Responsive --- */
+        @media (max-width: 768px) {
+            header { padding: 0 20px; }
+            
+            .intro-section {
+                flex-direction: column;
+                padding: 40px 20px;
+                padding-top: 100px;
+            }
+
+            .intro-content {
+                padding-left: 0;
+                width: 100%;
+            }
+
+            .artist-name { font-size: 40px; }
+            
+            .intro-image {
+                width: 100%;
+                height: 50vh; /* 모바일에서도 높이가 고정되므로 흔들리지 않음 */
+            }
+
+            .gallery-section { padding: 40px 0; }
+            .gallery-item { height: 300px; }
+            
+            /* 모바일 버튼 조정 */
+            .nav-btn {
+                padding: 10px;
+                width: 40px;
+                height: 40px;
+                font-size: 20px;
+            }
+            .prev-btn { left: 10px; }
+            .next-btn { right: 10px; }
+
+            .contact-section { padding: 60px 20px; }
+            
+            footer {
+                flex-direction: column;
+                padding: 20px;
+                gap: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="overlay" id="overlay"></div>
+
+    <header>
+        <div class="logo">
+            <a href="#" class="logo-main">Yerim LEE</a>
+            <span class="logo-sub">이예림 / ceramic artist</span>
+        </div>
+        
+        <div class="menu-icon" id="menuIcon" aria-label="Menu">
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </header>
+
+    <nav class="side-menu" id="sideMenu">
+    <ul>
+        <li><a href="index.html#intro" class="menu-link">Home</a></li>
+        <li><a href="index.html#about" class="menu-link">About</a></li>
+        
+        <li><a href="portfolio.html" class="menu-link">Portfolio</a></li>
+        
+        <li><a href="index.html#contact" class="menu-link">Contact</a></li>
+    </ul>
+</nav>
+
+    <main>
+        <section id="intro" class="intro-section">
+            <div class="intro-image"></div>
+            
+            <div class="intro-content">
+                <h1 class="artist-name">LEE Yerim</h1>
+                
+                <h2 id="about" class="section-title">작 가 노 트</h2>
+                
+                <div class="about-text korean">
+                    <p style="margin-bottom: 20px;">
+                        도자 작업은 수많은 공정과 변수를 거치는 과정으로 이루어지며, 숙련된 기술을 통해서도 전적으로 통제될 수 없는 영역을 필연적으로 포함한다. 
+                        완전한 통제는 작업의 목표라기보다 오히려 경계되어야 할 하나의 환상에 가깝다. 이 작업은 우연적으로 발생하는 요소를 제거하는 대신, 
+                        그것이 드러나는 방식을 받아들이는 태도에서 출발한다. 물질이 스스로 드러내는 성질을 존중하는 일은 작업을 성립시키는 중요한 조건이 된다.
+                    </p>
+
+                    <p style="margin-bottom: 20px;">
+                        이러한 태도는 작업에 사용되는 물질의 선택으로 이어진다.
+                    </p>
+
+                    <p style="margin-bottom: 20px;">
+                        모래는 오랜 시간에 걸친 퇴적의 결과로 형성된 물질이며, 미세한 입자 하나하나가 서로 다른 형상과 상태를 지닌다. 
+                        각각의 알갱이는 축적된 시간의 흔적을 품고 있고, 그 총체는 단일한 성질로 환원되지 않는다. 
+                        모래는 유동적이고 분산되며, 미세한 외부 조건에도 민감하게 반응한다. 그 거동은 예측보다는 불확실성에 가깝다.
+                    </p>
+                    
+                    <p>
+                        작업은 물레 성형이라는 인간의 기술적 개입 위에 이러한 비정제된 물질의 성질을 중첩시키는 방식으로 전개된다. 
+                        반복된 훈련과 손의 감각을 통해 형성된 구조 위로, 모래가 만들어내는 우연적인 표면의 흔적이 더해진다. 
+                        이때 표면에 남는 질감은 사전에 계획된 결과라기보다 통제와 비통제가 맞닿는 지점에서 발생한 물질적 반응의 기록으로 남는다. 
+                        그렇게 형성과 반응, 의도와 우연이 공존하는 상태 속에서 하나의 기가 완성된다.
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="portfolio" class="gallery-section">
+            <button class="nav-btn prev-btn" aria-label="Previous image">&#10094;</button>
+
+            <div class="gallery-container">
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/1-1.jpg" alt="Work 1-1"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/1-2.jpg" alt="Work 1-2"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/2-1.jpg" alt="Work 2-1"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/2-2.jpg" alt="Work 2-2"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/3-1.jpg" alt="Work 3-1"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/3-2.jpg" alt="Work 3-2"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/3-3.jpg" alt="Work 3-3"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/3-4.jpg" alt="Work 3-4"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/3-5.jpg" alt="Work 3-5"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/3-6.jpg" alt="Work 3-6"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/4-1.jpg" alt="Work 4-1"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/4-2.jpg" alt="Work 4-2"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/5-1.jpg" alt="Work 5-1"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/5-2.jpg" alt="Work 5-2"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/7-1.jpg" alt="Work 7-1"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/8.jpg" alt="Work 8"></a></div>
+    <div class="gallery-item"><a href="portfolio.html"><img src="pic/9.jpg" alt="Work 9"></a></div>
+</div>
+
+            <button class="nav-btn next-btn" aria-label="Next image">&#10095;</button>
+        </section>
+
+        <section id="contact" class="contact-section">
+            <div class="contact-col">
+                <h2 class="section-title" style="margin-top:0;">Contact</h2>
+                <div class="contact-info">
+                    <p><a href="mailto:lyr990211@naver.com">lyr990211@naver.com</a></p>
+                    <p class="social-link"><a href="https://www.instagram.com/y.rimmm_c/" target="_blank">@y.rimmm_c</a></p>
+                </div>
+            </div>
+            
+            <div class="contact-col">
+                <h2 class="section-title" style="margin-top:0;">Address</h2>
+                <div class="contact-info">
+                    <p>Art & Design Building</p>
+                    <p>621 Hwarang-ro, Nowon-gu</p>
+                    <p>Seoul 01797</p>
+                    <p style="margin-top: 10px;">+82 2-970-5731</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div>&copy; 2026 LEE Yerim. All rights reserved.</div>
+        <div>
+            <a href="https://www.instagram.com/swu_mfa_ceramics" target="_blank">@swu_mfa_ceramics</a>
+        </div>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            /* --- 1. 사이드 메뉴 기능 --- */
+            const menuIcon = document.getElementById('menuIcon');
+            const sideMenu = document.getElementById('sideMenu');
+            const overlay = document.getElementById('overlay');
+            const menuLinks = document.querySelectorAll('.menu-link');
+
+            function toggleMenu() {
+                sideMenu.classList.toggle('active');
+                overlay.classList.toggle('active');
+                menuIcon.classList.toggle('open');
+            }
+
+            // 아이콘, 오버레이 클릭 시 메뉴 토글
+            menuIcon.addEventListener('click', toggleMenu);
+            overlay.addEventListener('click', toggleMenu);
+
+            // 메뉴 링크 클릭 시 메뉴 닫으면서 이동
+            menuLinks.forEach(link => {
+                link.addEventListener('click', () => {
+                    toggleMenu();
+                });
+            });
+
+
+            /* --- 2. 갤러리 화살표 스크롤 기능 --- */
+            const gallery = document.querySelector('.gallery-container');
+            const prevBtn = document.querySelector('.prev-btn');
+            const nextBtn = document.querySelector('.next-btn');
+
+            // 한 번에 스크롤할 거리 계산 (화면 너비의 절반)
+            const scrollAmount = gallery.clientWidth / 2;
+
+            if(prevBtn && nextBtn) {
+                prevBtn.addEventListener('click', () => {
+                    gallery.scrollBy({
+                        left: -scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+
+                nextBtn.addEventListener('click', () => {
+                    gallery.scrollBy({
+                        left: scrollAmount,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+
+            // 마우스 휠 가로 스크롤 지원
+            gallery.addEventListener('wheel', (evt) => {
+                if(window.innerWidth > 768) { // 데스크탑에서만 작동
+                    evt.preventDefault();
+                    gallery.scrollLeft += evt.deltaY;
+                }
+            });
+        });
+    </script>
+</body>
+</html>
