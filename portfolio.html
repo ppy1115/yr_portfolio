@@ -43,10 +43,47 @@
             z-index: 1000;
         }
 
+        /* [추가] 왼쪽 영역 그룹 (뒤로가기 버튼 + 로고) */
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 30px; /* 버튼과 로고 사이 간격 */
+        }
+
+        /* [추가] 뒤로가기 버튼 스타일 */
+        .back-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px; 
+            height: 40px;
+            cursor: pointer;
+            padding: 0;
+            opacity: 1; /* 기본 a 태그 투명도 덮어쓰기 */
+        }
+        
+        .back-btn svg {
+            width: 26px;
+            height: 26px;
+            stroke: #1a1a1a;
+            stroke-width: 1.5;
+            fill: none;
+            transition: transform 0.3s ease, opacity 0.3s;
+        }
+
+        /* 버튼 호버 시 화살표 이동 효과 */
+        .back-btn:hover { opacity: 1; }
+        .back-btn:hover svg {
+            transform: translateX(-5px);
+            opacity: 0.7;
+        }
+
+        /* 로고 스타일 */
         .logo { display: flex; flex-direction: column; }
         .logo-main { font-size: 24px; font-weight: 700; letter-spacing: 0.1em; }
         .logo-sub { font-size: 14px; font-weight: 300; color: #888; }
 
+        /* 메뉴 아이콘 */
         .menu-icon {
             cursor: pointer; width: 30px; height: 20px;
             display: flex; flex-direction: column; justify-content: space-between;
@@ -78,21 +115,21 @@
         /* --- 메인 컨텐츠 --- */
         main { padding-top: var(--header-height); }
 
-        /* [수정됨] 히어로 섹션 (이미지 제거, 텍스트 강조) */
+        /* 히어로 섹션 */
         .hero-section {
             display: flex; 
             flex-direction: column;
             justify-content: center; 
             align-items: center; 
             text-align: center;
-            height: calc(90vh - var(--header-height)); /* 높이를 화면의 90% 정도로 설정하여 시원하게 */
+            height: calc(90vh - var(--header-height));
             width: 100%;
-            background-color: #fff; /* 배경을 깨끗한 흰색으로 */
+            background-color: #fff;
         }
         
         .hero-content {
             opacity: 0; 
-            animation: fadeInMove 1.5s ease-out forwards; /* 등장 애니메이션 추가 */
+            animation: fadeInMove 1.5s ease-out forwards;
         }
 
         .hero-job {
@@ -106,7 +143,7 @@
 
         .hero-title-kr { 
             font-family: 'Noto Serif KR', serif; 
-            font-size: 80px; /* 이름을 아주 크게 강조 */
+            font-size: 80px; 
             font-weight: 500; 
             margin-bottom: 10px; 
             color: #111;
@@ -121,12 +158,10 @@
             color: #555; 
         }
 
-        /* 등장 애니메이션 */
         @keyframes fadeInMove {
             0% { opacity: 0; transform: translateY(30px); }
             100% { opacity: 1; transform: translateY(0); }
         }
-
 
         /* --- 포트폴리오 레이아웃 --- */
         .portfolio-container {
@@ -135,19 +170,17 @@
             margin: 0 auto;
         }
 
-        /* 각 섹션 (왼쪽 정보 / 오른쪽 이미지) */
         .series-section {
             display: grid;
             grid-template-columns: 350px 1fr; 
             gap: 80px;
-            margin-bottom: 150px; /* 섹션 간 간격 */
+            margin-bottom: 150px;
             align-items: start;
-            border-bottom: 1px solid #eee; /* 섹션 구분선 */
+            border-bottom: 1px solid #eee;
             padding-bottom: 80px;
         }
         .series-section:last-child { border-bottom: none; }
 
-        /* 왼쪽 정보 (스크롤 시 고정) */
         .series-info {
             position: sticky;
             top: 150px;
@@ -167,14 +200,12 @@
             letter-spacing: -0.02em;
         }
 
-        /* 오른쪽 갤러리 */
         .series-gallery {
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2열 배치 */
+            grid-template-columns: repeat(2, 1fr);
             gap: 40px 20px;
         }
 
-        /* 갤러리 아이템 (사진 + 캡션) */
         .gallery-item {
             opacity: 0; transform: translateY(30px);
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -188,7 +219,6 @@
         }
         .gallery-item:hover img { filter: brightness(0.97); }
 
-        /* 3번 섹션처럼 개별 정보가 필요한 경우 사용 */
         .item-caption {
             font-size: 13px; color: #888; font-weight: 300;
         }
@@ -206,15 +236,16 @@
         /* --- 반응형 (모바일) --- */
         @media (max-width: 900px) {
             header { padding: 0 20px; }
+            .header-left { gap: 15px; } /* 모바일 간격 축소 */
+
             .portfolio-container { padding: 60px 20px; }
             
-            /* [수정됨] 모바일 히어로 조정 */
             .hero-section { height: 60vh; }
             .hero-title-kr { font-size: 48px; }
             .hero-title-en { font-size: 18px; }
 
             .series-section {
-                grid-template-columns: 1fr; /* 1열로 변경 */
+                grid-template-columns: 1fr;
                 gap: 30px;
                 padding-bottom: 60px;
                 margin-bottom: 60px;
@@ -231,10 +262,20 @@
     <div class="overlay" id="overlay"></div>
 
     <header>
-        <div class="logo">
-            <a href="#" class="logo-main">Yerim LEE</a>
-            <span class="logo-sub">이예림 / ceramic artist</span>
+        <div class="header-left">
+            <a href="javascript:history.back()" class="back-btn" aria-label="Go back">
+                <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="19" y1="12" x2="5" y2="12"></line>
+                    <polyline points="12 19 5 12 12 5"></polyline>
+                </svg>
+            </a>
+
+            <div class="logo">
+                <a href="#" class="logo-main">Yerim LEE</a>
+                <span class="logo-sub">이예림 / ceramic artist</span>
+            </div>
         </div>
+
         <div class="menu-icon" id="menuIcon">
             <span></span><span></span><span></span>
         </div>
